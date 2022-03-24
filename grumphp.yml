@@ -1,0 +1,23 @@
+grumphp:
+  hooks_dir: ~
+  hooks_preset: local
+  fixer:
+    enabled: false
+  tasks:
+    composer: ~
+    phpcs:
+      standard: phpcs_custom_ruleset.xml
+      whitelist_patterns:
+        - /^src\/(.*)/
+    phpcpd:
+      directory: ['src']
+      exclude: []
+      fuzzy: false
+      triggered_by: [ 'php' ]
+    phpcsfixer:
+      config: '.php-cs-fixer.dist.php'
+      config_contains_finder: true
+      verbose: true
+      diff: true
+      triggered_by: [ 'php' ]
+
