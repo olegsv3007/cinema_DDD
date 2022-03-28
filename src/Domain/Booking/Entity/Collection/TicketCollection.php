@@ -3,62 +3,81 @@
 namespace App\Domain\Booking\Entity\Collection;
 
 use App\Domain\Booking\Entity\Ticket;
+use InvalidArgumentException;
 use Iterator;
 
-class TicketCollection
+class TicketCollection implements Iterator
 {
-    private int $count;
+    private int $pointer = 0;
 
     /**
      * @param array<Ticket> $tickets
      */
     public function __construct(private array $tickets = [])
     {
-        $this->count = count($tickets);
+        $this->validateItems($tickets);
     }
 
-    public function addTicket(Ticket $ticket): void
+    public function add(Ticket $ticket): void
     {
         $this->tickets[] = $ticket;
-        $this->count++;
     }
 
-    public function removeTicket(Ticket $ticket): bool
+    public function remove(Ticket $ticket): void
     {
-        $key = $this->exist($ticket);
+        $key = array_search($ticket, $this->tickets, true);
 
         if ($key === false) {
-            return false;
+            return;
         }
 
         unset($this->tickets[$key]);
-        $this->count--;
-
-        return true;
     }
 
-    public function exist(Ticket $ticket): false|int|string
+    public function contains(Ticket $ticket): bool
     {
-        return array_search($ticket, $this->tickets, true);
-    }
-
-    /**
-     * @return array<Ticket>
-     */
-    public function all(): array
-    {
-        return $this->tickets;
+        return in_array($ticket, $this->tickets, true);
     }
 
     public function count(): int
     {
-        return $this->count;
+        return count($this->tickets);
     }
 
-    public function getGenerator(): Iterator
+    public function current(): Ticket
     {
-        foreach ($this->tickets as $ticket) {
-            yield $ticket;
-        }
+        return $this->tickets[$this->pointer];
+    }
+
+    public function next(): void
+    {
+        $this->pointer++;
+    }
+
+    public function key(): int
+    {
+        return $this->pointer;
+    }
+
+    public function valid(): bool
+    {
+        return isset($this->tickets[$this->pointer]);
+    }
+
+    public function rewind(): void
+    {
+        $this->pointer = 0;
+    }
+
+    /**
+     * @param array<Ticket> $tickets
+     */
+    private function validateItems(array $tickets): void
+    {
+        array_walk($tickets, static function ($ticket): void {
+            if (!($ticket instanceof Ticket)) {
+                throw new InvalidArgumentException();
+            }
+        });
     }
 }

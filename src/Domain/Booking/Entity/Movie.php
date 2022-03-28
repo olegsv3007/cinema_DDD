@@ -2,27 +2,29 @@
 
 namespace App\Domain\Booking\Entity;
 
+use App\Domain\Booking\Entity\ValueObject\Duration;
 use App\Domain\Booking\Entity\ValueObject\MovieId;
-use App\Domain\Booking\Entity\ValueObject\MovieName;
 
 class Movie
 {
-    public function __construct(private MovieId $id, private MovieName $name)
-    {
-    }
+    public function __construct(
+        private MovieId $id,
+        private string $name,
+        private Duration $duration,
+    ) { }
 
     public function getId(): MovieId
     {
         return $this->id;
     }
 
-    public function getName(): MovieName
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(MovieName $name): void
+    public function getDuration(): Duration
     {
-        $this->name = $name;
+        return $this->duration;
     }
 }

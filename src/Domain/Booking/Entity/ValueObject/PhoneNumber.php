@@ -2,15 +2,13 @@
 
 namespace App\Domain\Booking\Entity\ValueObject;
 
-use App\Domain\Booking\Exception\InvalidPhoneNumberException;
+use InvalidArgumentException;
 
 class PhoneNumber
 {
-    private string $number;
-
-    public function __construct(string $number)
+    public function __construct(private string $number)
     {
-        $this->setNumber($number);
+        $this->validatePhoneNumber($number);
     }
 
     public function getNumber(): string
@@ -26,13 +24,7 @@ class PhoneNumber
     public function validatePhoneNumberFormat(string $number): void
     {
         if (!preg_match('/^[0-9]{9,14}\z/', $number)) {
-            throw new InvalidPhoneNumberException();
+            throw new InvalidArgumentException();
         }
-    }
-
-    private function setNumber(string $number): void
-    {
-        $this->validatePhoneNumber($number);
-        $this->number = $number;
     }
 }

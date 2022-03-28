@@ -2,21 +2,14 @@
 
 namespace App\Domain\Booking\Entity\ValueObject;
 
-use App\Domain\Booking\Exception\DateDoesntExistException;
 use DateTime;
+use InvalidArgumentException;
 
 class Date
 {
-    private int $month;
-    private int $day;
-    private int $year;
-
-    public function __construct(int $month, int $day, int $year)
+    public function __construct(private int $month, private int $day, private int $year)
     {
         $this->validateDate($month, $day, $year);
-        $this->setMonth($month);
-        $this->setDay($day);
-        $this->setYear($year);
     }
 
     public function getYear(): int
@@ -47,22 +40,7 @@ class Date
     private function validateDateExists(int $month, int $day, int $year): void
     {
         if (checkdate($month, $day, $year)) {
-            throw new DateDoesntExistException();
+            throw new InvalidArgumentException();
         }
-    }
-
-    private function setMonth(int $month): void
-    {
-        $this->month = $month;
-    }
-
-    private function setDay(int $day): void
-    {
-        $this->day = $day;
-    }
-
-    private function setYear(int $year): void
-    {
-        $this->year = $year;
     }
 }

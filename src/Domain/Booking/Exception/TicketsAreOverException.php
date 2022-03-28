@@ -2,6 +2,6 @@
 
 namespace App\Domain\Booking\Exception;
 
-class InvalidHoursValueException extends \Exception
+class TicketsAreOverException extends \Exception
 {
 }
