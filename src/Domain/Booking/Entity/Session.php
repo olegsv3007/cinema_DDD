@@ -5,11 +5,9 @@ namespace App\Domain\Booking\Entity;
 use App\Domain\Booking\Entity\Collection\TicketCollection;
 use App\Domain\Booking\Entity\TransferObject\BookTicketDTO;
 use App\Domain\Booking\Entity\ValueObject\Client;
-use App\Domain\Booking\Entity\ValueObject\Date;
 use App\Domain\Booking\Entity\ValueObject\PhoneNumber;
 use App\Domain\Booking\Entity\ValueObject\SessionId;
 use App\Domain\Booking\Entity\ValueObject\TicketId;
-use App\Domain\Booking\Entity\ValueObject\Time;
 use App\Domain\Booking\Exception\TicketsAreOverException;
 use DateTime;
 
@@ -38,36 +36,19 @@ class Session
         return $this->movie;
     }
 
-    public function getDate(): Date
+    public function getDateTimeStart(): DateTime
     {
-        return new Date(
-            $this->dateTimeStart->format('m'),
-            $this->dateTimeStart->format('d'),
-            $this->dateTimeStart->format('Y'),
-        );
+        return $this->dateTimeStart;
     }
 
-    public function getTimeStart(): Time
+    public function getDateTimeEnd(): DateTime
     {
-        return new Time(
-            $this->dateTimeStart->format('H'),
-            $this->dateTimeStart->format('i'),
-        );
-    }
-
-    public function getTimeEnd(): Time
-    {
-        $dateTimeEnd = $this->dateTimeStart->add($this->movie->getDuration()->getDateInterval());
-
-        return new Time(
-            $dateTimeEnd->format('H'),
-            $dateTimeEnd->format('i'),
-        );
+        return $this->dateTimeStart->add($this->movie->getDuration()->getDateInterval());
     }
 
     public function hasFreeTickets(): bool
     {
-        return $this->bookedTickets->count() < $this->hall->getTotalSeats();
+        return $this->getFreeTicketsQuantity() > 0;
     }
 
     public function getFreeTicketsQuantity(): int

@@ -4,6 +4,7 @@ namespace App\Domain\Booking\Entity;
 
 use App\Domain\Booking\Entity\ValueObject\Client;
 use App\Domain\Booking\Entity\ValueObject\TicketId;
+use DateTime;
 
 class Ticket
 {
@@ -26,5 +27,10 @@ class Ticket
     public function getSession(): Session
     {
         return $this->session;
+    }
+
+    public function getDateTimeStart(): DateTime
+    {
+        return $this->session->getDateTimeStart();
     }
 }
